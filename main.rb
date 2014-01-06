@@ -2,7 +2,7 @@ require "rb-inotify"
 require "./transcoder.rb"
 require "./uploader.rb"
 
-VIDEO_DIRECTORY = "/home/emilio/videos"
+VIDEO_DIRECTORY = ENV["VIDEO_DIRECTORY"]
 
 puts "Starting video watcher.."
 #Process.daemon
