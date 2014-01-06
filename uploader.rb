@@ -10,8 +10,17 @@ class Uploader
     puts "Uploading #{@filename} to #{ENV["AWS_S3_BUCKET"]}..."
     @s3.buckets[ENV["AWS_S3_BUCKET"]].objects[key].write(file: @filename)
     puts "Finished uploading #{@filename}"
+    return true
   rescue Exception => e
     puts "Error uploading #{@filename}: #{e.inspect}"
+    return false
+  end
+
+  def notify_api
+    uri = URI(ENV["API_HOST"] + "/api/streams/#{stream_id}/archived")
+    Net::HTTP.post_form(uri, {})
+  rescue
+    puts "Cannot connect to #{uri.to_s}"
   end
 
   private

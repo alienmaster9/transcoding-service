@@ -19,7 +19,7 @@ class Transcoder
 
   def transcode
     puts "Converting #{input_file}"
-    system("ffmpeg -i #{input_file} -f webm -codec:v copy -codec:a vorbis -ac 2 -strict -2 #{output_file}")
+    system("ffmpeg -i #{input_file} -y -f webm -codec:v copy -codec:a vorbis -ac 2 -strict -2 #{output_file}")
     puts "Removing #{input_file}..."
     system("rm #{input_file}")
     output_file

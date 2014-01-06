@@ -9,15 +9,23 @@ puts "Starting video watcher.."
 
 notifier = INotify::Notifier.new
 
-i = 1
 notifier.watch(VIDEO_DIRECTORY, :close_write) do |event|
+
   if event.name =~ /mkv$/
-    puts "#{i}: Processing #{event.name}"
+
+    puts "#{Time.now}: Processing #{event.name}"
+
     transcoder = Transcoder.new(event.name, VIDEO_DIRECTORY)
     new_file = transcoder.process
-    Uploader.new(new_file).upload
-    i += 1
+
+    uploader = Uploader.new(new_file)
+    if uploader.upload
+      uploader.notify_api
+      system("rm #{new_file}")
+    end
+
   end
+
 end
 
 notifier.run
