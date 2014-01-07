@@ -1,4 +1,7 @@
-# Streaming Service
+# Transcoding Service
+
+The transcoding service converts mkv videos to webm and uploads them to Amazon S3.
+After that, the URL(`archived_url`) of the uploaded video is send to the Peepol.tv API `PUT /api/streams/:id`
 
 ## Environment variables
 
