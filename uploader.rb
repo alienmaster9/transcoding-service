@@ -17,10 +17,22 @@ class Uploader
   end
 
   def notify_api
-    uri = URI(ENV["API_HOST"] + "/api/streams/#{stream_id}/archived")
-    Net::HTTP.post_form(uri, {archived_url: @uploaded_file.public_url})
-  rescue
-    puts "Cannot connect to #{uri.to_s}"
+    uri = URI.parse(ENV["API_HOST"])
+    http = Net::HTTP.new(uri.host, uri.port)
+
+    request = Net::HTTP::Get.new("/api/streams.json?stream_id=#{stream_id}")
+    stream = JSON.parse(http.request(request).body)
+
+    if stream.empty?
+      puts "#{stream_id} not found on API"
+    else
+      request = Net::HTTP::Put.new("/api/streams/#{stream[0]["id"]}.json?auth_token=#{ENV["AUTH_TOKEN"]}")
+      request.set_form_data({archived_url: @uploaded_file.public_url })
+      http.request(request)
+    end
+
+   rescue Exception => e
+     puts "Cannot connect to #{http.to_s}: #{e.inspect}"
   end
 
   private
