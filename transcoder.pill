@@ -4,18 +4,18 @@ transcoder_dir		  = File.join root_dir, "current"
 pid_dir               = File.join root_dir, "pids"
 log_dir               = File.join root_dir, "logs"
 
-Bluepill.application("licode-transcoding", :log_file => File.join(log_dir, "transcoder.bluepill.log")) do |app|
+Bluepill.application("transcoder", :log_file => File.join(log_dir, "transcoder.bluepill.log")) do |app|
 
   app.uid = app.gid = "deploy"
 
   # Erizo
-  app.process("transcoder") do |process|
+  app.process("watcher") do |process|
     process.working_dir = transcoder_dir
-    process.pid_file = File.join(pid_dir, "transcoder.pid")
+    process.pid_file = File.join(pid_dir, "transcoder.watcher.pid")
     process.daemonize = true
 
     process.start_command = "ruby main.rb"
-    process.stdout = process.stderr = File.join(log_dir, "transcoder.log")
+    process.stdout = process.stderr = File.join(log_dir, "transcoder.watcher.log")
 
     process.start_grace_time = 8.seconds
     process.stop_grace_time = 5.seconds
