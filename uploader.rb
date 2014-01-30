@@ -35,10 +35,11 @@ class Uploader
      puts "Cannot connect to #{http.to_s}: #{e.inspect}"
   end
 
-  private
   def stream_id
     @filename.match(/\d+/).to_s
   end
+
+  private
 
   # returns the key name for the new resource on S3
   def key

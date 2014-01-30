@@ -20,8 +20,11 @@ notifier.watch(VIDEO_DIRECTORY, :close_write) do |event|
 
     uploader = Uploader.new(new_file)
     if uploader.upload
+      puts "Notifying API for stream_id #{uploader.stream_id}"
       uploader.notify_api
       system("rm #{new_file}")
+    else
+      puts "The file was not uploaded #{new_file}"
     end
 
   end
